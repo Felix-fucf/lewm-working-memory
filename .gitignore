@@ -1,0 +1,13 @@
+
+# Python cache
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Training and Hydra outputs
+lightning_logs/
+outputs/
+wandb/
+
+# Local backup files
+*.before_*
