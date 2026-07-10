@@ -1,0 +1,159 @@
+# =============================================================================
+# OOT Leaky-RNN World Model
+#
+# 整体结构：
+#
+#   pixels
+#     -> ViT encoder
+#     -> projector
+#     -> visual latent z_t
+#     -> Leaky-RNN memory
+#     -> memory latent m_t
+#     -> action-conditioned Transformer predictor
+#     -> predicted latent z_(t+1)
+#
+# 除 Leaky-RNN 外，其余主要组件尽量保持与原 LeWorldModel 一致，
+# 以便把模型变化集中在“是否存在显式递归工作记忆”上。
+# =============================================================================
+
+_target_: module_oot.OOTJEPA
+
+# -----------------------------------------------------------------------------
+# 1. 图像编码器
+#
+# 与原 model/lewm.yaml 完全一致。
+# ViT-Tiny 的 hidden dimension 为 192，对应全局 embed_dim。
+# -----------------------------------------------------------------------------
+encoder:
+  _target_: stable_pretraining.backbone.utils.vit_hf
+  size: tiny
+  patch_size: 14
+  image_size: ${img_size}
+  pretrained: false
+  use_mask_token: false
+
+# -----------------------------------------------------------------------------
+# 2. 原 LeWorldModel 的自回归 Transformer predictor
+#
+# predictor 接收：
+#   memory_emb: (B, history_size, 192)
+#   act_emb:    (B, history_size, 192)
+#
+# 输出：
+#   pred_emb:   (B, history_size, 192)
+# -----------------------------------------------------------------------------
+predictor:
+  _target_: module.ARPredictor
+  num_frames: ${history_size}
+  input_dim: ${embed_dim}
+  hidden_dim: ${embed_dim}
+  output_dim: ${embed_dim}
+  depth: 6
+  heads: 16
+  mlp_dim: 2048
+  dim_head: 64
+  dropout: 0.1
+  emb_dropout: 0.0
+
+# -----------------------------------------------------------------------------
+# 3. 动作编码器
+#
+# input_dim 在 train_oot.py 中根据数据集 action 的实际维度自动填写：
+#
+#   cfg.model.action_encoder.input_dim
+#       = frameskip × dataset.get_dim("action")
+#
+# 当前 OOT 数据还没有生成，所以这里继续使用 ??? 占位。
+# -----------------------------------------------------------------------------
+action_encoder:
+  _target_: module.Embedder
+  input_dim: ???
+  emb_dim: ${embed_dim}
+
+# -----------------------------------------------------------------------------
+# 4. Leaky-RNN 工作记忆
+#
+# 输入是视觉 latent 与动作 latent 的融合：
+#
+#   x_t = z_t + action_embedding_t
+#
+# 更新公式：
+#
+#   candidate_t = tanh(W_x x_t + W_h h_(t-1) + b)
+#
+#   h_t = (1-alpha) h_(t-1) + alpha candidate_t
+#
+# 初版固定 alpha=0.2：
+#   - 便于解释；
+#   - 便于之后比较 alpha=0.1/0.2/0.5；
+#   - 避免模型通过任意调整 alpha 混淆实验结论。
+# -----------------------------------------------------------------------------
+memory:
+  _target_: module_oot.LeakyRNNMemory
+  input_dim: ${embed_dim}
+  hidden_dim: ${embed_dim}
+  leak_rate: 0.2
+  learnable_leak: false
+  dropout: 0.0
+
+# OOTJEPA 需要知道 predictor 使用的最终 embedding 维度。
+embed_dim: ${embed_dim}
+
+# -----------------------------------------------------------------------------
+# 5. 图像编码器后的 projector
+#
+# 与原始 LeWM 保持相同。
+# -----------------------------------------------------------------------------
+projector:
+  _target_: module.MLP
+  input_dim: ${embed_dim}
+  output_dim: ${embed_dim}
+  hidden_dim: 2048
+  norm_fn:
+    _target_: torch.nn.BatchNorm1d
+    _partial_: true
+
+# -----------------------------------------------------------------------------
+# 6. predictor 输出后的 projection head
+#
+# 与原始 LeWM 保持相同。
+# -----------------------------------------------------------------------------
+pred_proj:
+  _target_: module.MLP
+  input_dim: ${embed_dim}
+  output_dim: ${embed_dim}
+  hidden_dim: 2048
+  norm_fn:
+    _target_: torch.nn.BatchNorm1d
+    _partial_: true
+
+# -----------------------------------------------------------------------------
+# 7. 动作是否直接进入 Leaky-RNN
+#
+# true：
+#   遮挡期间虽然看不到物体，但动作仍能推动内部记忆状态变化。
+#
+# false：
+#   Leaky-RNN 只能根据视觉 latent 更新。
+#
+# 初版使用 true。之后可以把 false 作为重要消融实验。
+# -----------------------------------------------------------------------------
+fuse_action_into_memory: true
+
+# 当前 action_encoder 已经输出 192 维，因此不需要额外投影。
+action_memory_proj:
+  _target_: torch.nn.Identity
+
+# -----------------------------------------------------------------------------
+# 8. memory residual
+#
+# 将 Leaky-RNN 输出视为对当前视觉 latent 的补充：
+#
+#   memory_emb_t = LayerNorm(
+#       z_t + scale × memory_delta_t
+#   )
+#
+# 这样模型初始化时不会完全丢掉 encoder 的当前帧信息。
+# -----------------------------------------------------------------------------
+memory_residual: true
+memory_residual_scale: 0.25
