@@ -1,0 +1,72 @@
+campaign_id: occlusion_curriculum_20260728
+deadline: 2026-08-09
+full_training_epochs: 25
+gpu_policy: single_gpu_serial
+manual_hours_per_day: 3
+
+historical_superseded_baseline:
+  dataset: primitive_v1_mixed_train
+  run_id: main25_conditioned_varcov_nocontent_20260716_115719
+  reason: predictor had Transformer history access and a visual residual bypass
+
+corrected_baseline:
+  label: C0
+  dataset: primitive_v1_mixed_train
+  loss: L0
+  seed: 3072
+  architecture: oot_leaky_bottleneck_ln_zeroh0
+
+data:
+  source_median_occlusion_length: 8
+  generator_seed: 20260728
+  split_fractions: [0.90, 0.05, 0.05]
+  split_unit: trajectory_id
+  dshort:
+    occlusion_length: 2
+    reveal_index: 18
+  dmid:
+    occlusion_length: 4
+    reveal_index: 18
+  dlong_eval:
+    occlusion_length: 8
+    reveal_index: 18
+    training_candidate: false
+  dfinal:
+    length_mix:
+      2: 0.50
+      4: 0.30
+      8: 0.20
+    reveal_indices: [17, 18, 19]
+    matched_pair_episode_fraction: 0.20
+    xy_std_ratio_range: [0.80, 1.25]
+    nuisance_auc_max: 0.55
+
+runs:
+  - {label: C0, dataset: d0, loss: L0, seed: 3072}
+  - {label: R1, dataset: dshort, loss: L0, seed: 3072}
+  - {label: R2, dataset: dmid, loss: L0, seed: 3072}
+  - {label: R3, dataset: dfinal, loss: L0, seed: 3072}
+  - {label: R4, dataset: selected, loss: L0, seed: 4096}
+  - {label: R5, dataset: selected, loss: L0, seed: 5120}
+
+loss_experiment:
+  status: deferred_until_after_core_six_runs
+
+selection:
+  require_dataset_acceptance: true
+  noncollapse_effective_rank_min: 10.0
+  noncollapse_top1_variance_ratio_max: 0.50
+  max_nmse_ratio_to_corrected_c0_same_variant: 1.10
+  score: hidden_shuffle_relative_error_increase
+  tie_threshold: 0.01
+  tie_winner: dfinal
+
+causal_gate:
+  hidden_shuffle_relative_increase_min: 0.05
+  hidden_shuffle_bootstrap_ci95_lower_min_exclusive: 0.0
+  require_reset_positive: true
+  require_no_memory_positive: true
+  require_noncollapse: true
+  max_nmse_ratio_to_corrected_c0_same_variant: 1.10
+  required_consistent_seeds: 2
+  total_target_seeds: 3

@@ -1,0 +1,8 @@
+defaults:
+  - lewm_occlusion
+  - _self_
+
+# L1 changes exactly one switch: predictor-side independent VICReg var/cov
+# is removed; encoder-side conditioned var/cov remains enabled.
+oot_loss:
+  regularize_prediction: false

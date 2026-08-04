@@ -1,0 +1,21 @@
+{
+  "status": "confirmed_recovered_artifact",
+  "run_id": "main25_conditioned_varcov_nocontent_20260716_115719",
+  "checkpoint_epoch": 23,
+  "checkpoint_artifact": "weights_epoch_23.pt",
+  "checkpoint_availability": "remote_only_not_in_repository",
+  "dataset": "primitive_v1_mixed_train",
+  "final_reappearance": {
+    "normalized_mse": 1.765478906357174,
+    "shuffled_hidden_relative_increase": 0.0000020547735901654818,
+    "reset_each_step_relative_increase": 0.0013955124703333155,
+    "no_memory_delta_relative_increase": 0.001640208410541355
+  },
+  "global_rank": {
+    "target_effective_rank": 37.4539676829617,
+    "target_top1_variance_ratio": 0.375324368338875,
+    "prediction_effective_rank": 40.93744727325131,
+    "prediction_top1_variance_ratio": 0.3903429379423372
+  },
+  "evidence_source": "recovered epoch23 effective_rank_report.json and memory_ablation.json"
+}
