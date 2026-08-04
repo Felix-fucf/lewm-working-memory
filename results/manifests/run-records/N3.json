@@ -1,0 +1,19 @@
+{
+  "label": "N3",
+  "run_id": "N3_motion15x_L2_s3072",
+  "dataset": "motion15x",
+  "loss": "L2",
+  "seed": 3072,
+  "epochs": 25,
+  "model_config": "oot_leaky_bottleneck_ln_zeroh0",
+  "strict_recurrent_bottleneck": true,
+  "started_utc": "2026-07-31T19:03:02.505081+00:00",
+  "completed_utc": "2026-07-31T21:52:13.150623+00:00",
+  "training_seconds_this_invocation": 10150.534196402878,
+  "checkpoint": "${WORLD_MODEL_ROOT}/.stable-wm/checkpoints/N3_motion15x_L2_s3072/weights_epoch_25.pt",
+  "checkpoint_sha256": "3ec231cc5b39d324af2ecc953800e2ab77bae806205dbb5e25ad3fa68cd35b74",
+  "health_failures": [],
+  "status": "confirmed_complete",
+  "checkpoint_availability": "remote_only_not_in_repository",
+  "provenance": "sanitized copy of the verified remote run record"
+}

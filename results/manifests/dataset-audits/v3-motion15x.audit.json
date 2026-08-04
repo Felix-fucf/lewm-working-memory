@@ -1,0 +1,306 @@
+{
+  "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v3/primitive_v3_h4_reveal5_motion15x.h5",
+  "sha256": "a2bb50b6c767671b4d679b23413ee492ed5317a8553bcaa3eeda88b4aba95331",
+  "dataset_variant": "primitive_v3_h4_reveal5_motion15x",
+  "num_episodes": 16060,
+  "motion_scale": 1.5,
+  "motion_type_counts": {
+    "0": 6062,
+    "1": 9998
+  },
+  "motion_type_fractions": {
+    "0": 0.37745952677459527,
+    "1": 0.6225404732254047
+  },
+  "schedule": {
+    "observed_schedules": [
+      "(3, 4, 4, 4, 7)",
+      "(3, 4, 5, 4, 6)",
+      "(3, 4, 6, 4, 5)",
+      "(3, 4, 7, 4, 4)",
+      "(3, 4, 8, 4, 3)"
+    ],
+    "exact_schedule_set": true,
+    "first_occlusion_fixed_onset_3_length_4": true,
+    "second_occlusion_fixed_length_4": true,
+    "reveal_counts": {
+      "15": 3213,
+      "16": 3213,
+      "17": 3212,
+      "18": 3211,
+      "19": 3211
+    },
+    "per_split": {
+      "0": {
+        "counts": {
+          "(3, 4, 4, 4, 7)": 2889,
+          "(3, 4, 5, 4, 6)": 2889,
+          "(3, 4, 6, 4, 5)": 2889,
+          "(3, 4, 7, 4, 4)": 2888,
+          "(3, 4, 8, 4, 3)": 2888
+        },
+        "max_minus_min": 1
+      },
+      "1": {
+        "counts": {
+          "(3, 4, 4, 4, 7)": 161,
+          "(3, 4, 5, 4, 6)": 161,
+          "(3, 4, 6, 4, 5)": 160,
+          "(3, 4, 7, 4, 4)": 160,
+          "(3, 4, 8, 4, 3)": 160
+        },
+        "max_minus_min": 1
+      },
+      "2": {
+        "counts": {
+          "(3, 4, 4, 4, 7)": 163,
+          "(3, 4, 5, 4, 6)": 163,
+          "(3, 4, 6, 4, 5)": 163,
+          "(3, 4, 7, 4, 4)": 163,
+          "(3, 4, 8, 4, 3)": 163
+        },
+        "max_minus_min": 0
+      }
+    },
+    "per_split_balanced_within_one": true
+  },
+  "structure": {
+    "checks": {
+      "phase_id_matches_schedule": true,
+      "visibility_matches_schedule": true,
+      "reappearance_masks_match_schedule": true,
+      "episode_reset_only_at_t0": true,
+      "valid_mask_all_one": true
+    },
+    "all_pass": true
+  },
+  "frame_loss_weights": {
+    "policy": "phase_relative_random_onset_zero_fixed_reveal_sum_normalized_v3_1",
+    "episode_sum_min": 20.19999885559082,
+    "episode_sum_max": 20.200000762939453,
+    "episode_sums_20_2": true,
+    "random_second_onset_weights_zero": true,
+    "final_reveal_weight_min": 3.0,
+    "final_reveal_weight_at_least_2_5": true,
+    "reveal_weight_mean_ratio": 1.0,
+    "prediction_target_alignment": "train_oot.align_target_time(frame_loss_weight) uses frame t+1 weight for prediction t"
+  },
+  "boundary": {
+    "policy": "preserve_anchor_reject_whole_episode_on_contact_v1",
+    "contact_episode_count": 0,
+    "contact_frame_count": 0,
+    "zero_contact": true,
+    "near_boundary_episode_fraction_margin_0_02": 0.05927770859277708,
+    "note": "Near-boundary episodes are reported, not filtered; no trajectory is centered or clipped."
+  },
+  "orientation": {
+    "angle_unit": "radian",
+    "shape": [
+      16060,
+      22,
+      2
+    ],
+    "expected_shape": [
+      16060,
+      22,
+      2
+    ],
+    "shape_is_episode_time_xy": true,
+    "max_abs_angle_vector_error": 2.9802151080282613e-08,
+    "max_abs_unit_norm_error": 4.1907646242123064e-08,
+    "matches_object_angle": true
+  },
+  "split": {
+    "counts": {
+      "0": 14443,
+      "1": 802,
+      "2": 815
+    },
+    "trajectory_conflicts": 0,
+    "disjoint": true
+  },
+  "matched_pairs": {
+    "pair_count": 1606,
+    "all_motion_action_schedule_invariants_pass": true,
+    "failures": [],
+    "future_y_delta_median": 0.24000000953674316,
+    "visible_history_identical_pair_count": 0,
+    "semantics": "matched source motion/action/schedule with renderer-based y intervention; not an exact matched-visible-history causal pair"
+  },
+  "distribution_and_future_correlation": {
+    "phase_frame_counts": {
+      "0": 48180,
+      "1": 64240,
+      "2": 96354,
+      "3": 64240,
+      "4": 80306
+    },
+    "phase_frame_fractions": {
+      "0": 0.13636363636363635,
+      "1": 0.18181818181818182,
+      "2": 0.27271029095437566,
+      "3": 0.18181818181818182,
+      "4": 0.22728970904562437
+    },
+    "position": {
+      "mean": [
+        0.49909861327406135,
+        0.4997431088348609
+      ],
+      "std": [
+        0.12410929572031815,
+        0.1251835212711312
+      ],
+      "min": [
+        0.15512537956237793,
+        0.15501150488853455
+      ],
+      "max": [
+        0.8448181748390198,
+        0.8449361324310303
+      ]
+    },
+    "velocity": {
+      "mean": [
+        -4.8910653898453746e-05,
+        -8.399799159837687e-05
+      ],
+      "std": [
+        0.01531367101515252,
+        0.014662855104372602
+      ],
+      "min": [
+        -0.14539337158203125,
+        -0.12549036741256714
+      ],
+      "max": [
+        0.12117406725883484,
+        0.1222778707742691
+      ]
+    },
+    "action": {
+      "mean": [
+        -1.1870191680724376e-05,
+        -1.461773166219672e-05,
+        5.514183451756215e-05
+      ],
+      "std": [
+        0.005714919922712018,
+        0.005659855041779074,
+        0.025934089285119415
+      ],
+      "min": [
+        -0.02696790173649788,
+        -0.02762061171233654,
+        -0.09512823075056076
+      ],
+      "max": [
+        0.02736470475792885,
+        0.02834274061024189,
+        0.09434466063976288
+      ]
+    },
+    "boundary": {
+      "episode_fraction_with_event": 0.05927770859277708,
+      "frame_fraction": 0.005872863126910449,
+      "frames_per_episode": {
+        "mean": 0.12920298879202988,
+        "std": 0.6293418946128193,
+        "min": 0.0,
+        "max": 9.0
+      }
+    },
+    "future_correlations": {
+      "occlusion_onset": {
+        "future_x": -0.012423955213183516,
+        "future_y": -0.00030502706204573745
+      },
+      "occlusion_length": {
+        "future_x": 0.0,
+        "future_y": 0.0
+      },
+      "reveal_index": {
+        "future_x": -0.012423955213183513,
+        "future_y": -0.0003050270620457582
+      },
+      "boundary_frame_count": {
+        "future_x": -0.007165588989805828,
+        "future_y": -0.009573595070775142
+      },
+      "action_mean_0": {
+        "future_x": 0.017817523039891193,
+        "future_y": -0.0026248010093037986
+      },
+      "action_std_0": {
+        "future_x": -0.006941417438698937,
+        "future_y": 0.0005903877774055396
+      },
+      "action_mean_1": {
+        "future_x": -0.01696793484992447,
+        "future_y": 0.01926332414354084
+      },
+      "action_std_1": {
+        "future_x": -0.006421600264612477,
+        "future_y": 0.0011166062669293654
+      },
+      "action_mean_2": {
+        "future_x": -0.021270776432292207,
+        "future_y": -0.006945926492635269
+      },
+      "action_std_2": {
+        "future_x": 0.00022007245264760695,
+        "future_y": -0.002167729848353568
+      }
+    }
+  },
+  "shortcut_and_oracle_baselines": {
+    "time_phase": {
+      "test_episodes": 815,
+      "r2_x": -0.0006574291428298462,
+      "r2_y": -5.473002977707253e-05,
+      "mse": 0.016304099603135256
+    },
+    "action_only": {
+      "test_episodes": 815,
+      "r2_x": 0.2284657237323211,
+      "r2_y": 0.15728035591882894,
+      "mse": 0.013129082468230175
+    },
+    "no_memory_time_action": {
+      "test_episodes": 815,
+      "r2_x": 0.22857325699646303,
+      "r2_y": 0.15733027587994008,
+      "mse": 0.013127778707210819
+    },
+    "kinematic_oracle": {
+      "test_episodes": 815,
+      "r2_x": 0.9971318600630165,
+      "r2_y": 0.9973136370010947,
+      "mse": 4.53290778076135e-05
+    }
+  },
+  "acceptance": {
+    "dataset_version_v3": true,
+    "completed": true,
+    "frame_loss_weight_policy": true,
+    "boundary_policy": true,
+    "first_occlusion_policy": true,
+    "first_occlusion_not_randomized": true,
+    "object_orientation_policy": true,
+    "exact_five_schedule_set": true,
+    "schedule_balanced_in_each_split": true,
+    "first_occlusion_fixed": true,
+    "second_occlusion_fixed_h4": true,
+    "structural_invariants": true,
+    "episode_weight_sum_20_2": true,
+    "random_onset_weight_zero": true,
+    "reveal_weight_at_least_2_5": true,
+    "reveal_weight_ratio_at_most_1_25": true,
+    "no_boundary_contact": true,
+    "orientation_matches_angle": true,
+    "trajectory_splits_disjoint": true,
+    "pair_invariants": true,
+    "motion_types_remain_diverse": true
+  },
+  "all_required_acceptance_pass": true
+}

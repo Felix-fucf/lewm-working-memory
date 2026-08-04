@@ -1,0 +1,25 @@
+{
+  "original": "${WORLD_MODEL_ROOT}/datasets/primitive_v3/primitive_v3_h4_reveal5_original_motion.h5",
+  "motion15x": "${WORLD_MODEL_ROOT}/datasets/primitive_v3/primitive_v3_h4_reveal5_motion15x.h5",
+  "shared_fields": {
+    "trajectory_id": true,
+    "split_id": true,
+    "pair_id": true,
+    "pair_role": true,
+    "phase_lengths": true
+  },
+  "median_nonzero_step_displacement_ratio": 1.5,
+  "checks": {
+    "shared_episode_schedule_split_pair_mapping": true,
+    "original_position_matches_source_after_pair_shift_removed": true,
+    "motion_position_is_anchor_preserving_1_5x_after_pair_shift_removed": true,
+    "original_action_matches_source": true,
+    "motion_action_is_1_5x": true,
+    "original_velocity_matches_source": true,
+    "motion_velocity_is_1_5x": true,
+    "motion_angle_change_is_1_5x": true,
+    "motion_angular_velocity_is_1_5x": true,
+    "median_step_displacement_increase_at_least_45_percent": true
+  },
+  "all_required_acceptance_pass": true
+}

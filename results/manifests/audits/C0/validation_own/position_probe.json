@@ -1,0 +1,51 @@
+{
+  "interpretation": "Decodability diagnostic only; not causal-memory evidence.",
+  "ridge_alpha": 0.001,
+  "scopes": {
+    "all": {
+      "status": "ok",
+      "train_samples": 40320,
+      "test_samples": 10080,
+      "train_episodes": 1920,
+      "test_episodes": 480,
+      "x": {
+        "mse": 0.016358610343854642,
+        "r2": -0.023325153907160612
+      },
+      "y": {
+        "mse": 0.01549146954884684,
+        "r2": -0.009806867614520431
+      }
+    },
+    "occluded": {
+      "status": "ok",
+      "train_samples": 23040,
+      "test_samples": 5760,
+      "train_episodes": 1920,
+      "test_episodes": 480,
+      "x": {
+        "mse": 0.015869772612009905,
+        "r2": -0.010277844343383968
+      },
+      "y": {
+        "mse": 0.014365770621500492,
+        "r2": -0.03626592182489752
+      }
+    },
+    "final_reappearance": {
+      "status": "ok",
+      "train_samples": 1920,
+      "test_samples": 480,
+      "train_episodes": 1920,
+      "test_episodes": 480,
+      "x": {
+        "mse": 0.018902926050408077,
+        "r2": -0.09601231831746881
+      },
+      "y": {
+        "mse": 0.019236903584756306,
+        "r2": -0.022043617487778944
+      }
+    }
+  }
+}

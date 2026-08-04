@@ -1,0 +1,148 @@
+{
+  "interpretation": "Decodability diagnostic only; not causal-memory evidence.",
+  "ridge_alpha": 0.001,
+  "scopes": {
+    "all": {
+      "status": "ok",
+      "train_samples": 13482,
+      "test_samples": 3360,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.011964384863635451,
+        "r2": -0.1198785138634153
+      },
+      "y": {
+        "mse": 0.014672621457493668,
+        "r2": -0.16277734890470485
+      }
+    },
+    "occluded": {
+      "status": "ok",
+      "train_samples": 5136,
+      "test_samples": 1280,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.014494157130722728,
+        "r2": -0.12692769778175395
+      },
+      "y": {
+        "mse": 0.014831463203646492,
+        "r2": -0.10826992568326821
+      }
+    },
+    "final_reappearance": {
+      "status": "ok",
+      "train_samples": 642,
+      "test_samples": 160,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.015195274068185539,
+        "r2": -0.3020334155219302
+      },
+      "y": {
+        "mse": 0.01658600166651681,
+        "r2": -0.3801419443741072
+      }
+    }
+  },
+  "velocity_scopes": {
+    "all": {
+      "status": "ok",
+      "train_samples": 13482,
+      "test_samples": 3360,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.00010466251471905982,
+        "r2": -0.012058203881718521
+      },
+      "y": {
+        "mse": 9.825320701189093e-05,
+        "r2": 0.03329531011420528
+      }
+    },
+    "occluded": {
+      "status": "ok",
+      "train_samples": 5136,
+      "test_samples": 1280,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.00011082810010399609,
+        "r2": -0.10122443585347818
+      },
+      "y": {
+        "mse": 0.0001028855246362566,
+        "r2": 0.002250173251627907
+      }
+    },
+    "final_reappearance": {
+      "status": "ok",
+      "train_samples": 642,
+      "test_samples": 160,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "x": {
+        "mse": 0.00014517590016333096,
+        "r2": -0.08219361742207965
+      },
+      "y": {
+        "mse": 0.0001047476343943856,
+        "r2": -0.01255434857776394
+      }
+    }
+  },
+  "angle_scopes": {
+    "all": {
+      "status": "ok",
+      "train_samples": 13482,
+      "test_samples": 3360,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "sin": {
+        "mse": 0.5435622498716776,
+        "r2": -0.049014893299142104
+      },
+      "cos": {
+        "mse": 0.5194780668538085,
+        "r2": -0.07966409923977014
+      },
+      "mean_r2": -0.06433949626945612
+    },
+    "occluded": {
+      "status": "ok",
+      "train_samples": 5136,
+      "test_samples": 1280,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "sin": {
+        "mse": 0.5804516666606041,
+        "r2": -0.09471244043626892
+      },
+      "cos": {
+        "mse": 0.5265660853066054,
+        "r2": -0.12314897650332912
+      },
+      "mean_r2": -0.10893070846979902
+    },
+    "final_reappearance": {
+      "status": "ok",
+      "train_samples": 642,
+      "test_samples": 160,
+      "train_episodes": 642,
+      "test_episodes": 160,
+      "sin": {
+        "mse": 0.7356012497756522,
+        "r2": -0.4110120305452063
+      },
+      "cos": {
+        "mse": 0.7057315787969918,
+        "r2": -0.4832190727768759
+      },
+      "mean_r2": -0.4471155516610411
+    }
+  }
+}

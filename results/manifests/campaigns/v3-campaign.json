@@ -1,0 +1,102 @@
+{
+  "created_utc": "2026-07-31T12:22:09.272517+00:00",
+  "campaign": "occlusion_v3_reveal5_20260731",
+  "source_dataset": "${WORLD_MODEL_ROOT}/datasets/primitive_v1/formal_v1/primitive_v1_mixed_train.h5",
+  "source_sha256": "07bf078c00ebb46b7aea309bbd1f103c23d4e9b6ae15fab26360fa8f21b22312",
+  "files": {
+    "module_oot.py": "aef96a863b5a4cb03af19b0da53c3462d32a92ae0bc1419ab9768cb0356015cb",
+    "train_oot.py": "4d009d831ecdacc5fa768e9e95ef4e7ef3b99168ef994f193ad3c95f88ba2696",
+    "config/train/lewm_occlusion_v3_l1.yaml": "a2700c70dc57164573ce12781021e7c532a97318df89ab34cafe55ee5e102ec2",
+    "config/train/lewm_occlusion_v3_l2.yaml": "f2ddb4f276b84a2af6a6c711a7702264ef14fffbf05af16fbf60e1ebbc346562",
+    "config/train/data/primitive_v3_h4_reveal5_original_motion.yaml": "9dd14d4d038b5a8c63d472be42fc34bd93d34e74016ae46d429ccb0925abf075",
+    "config/train/data/primitive_v3_h4_reveal5_motion15x.yaml": "b64a9fe9c55b7e6e4e87ee56a39644d0552e6a659351887ac821fb1483fc1108",
+    "configs/occlusion_v3/campaign.yaml": "e1725876e5a2c43f651e0d3f981604a8f1511671839d506e264e0f6be67a1128",
+    "schema_tools/build_occlusion_v3.py": "4017c7c6d4cfffbde0de303b4c12ac33217b96991e08ad5a8fa0197a9f3e3f37",
+    "schema_tools/audit_occlusion_v3.py": "0a452c1c49436255ee4d6dbae6de0f4a55f336f6918dcb957328ab2f05266e2f",
+    "analysis/audit_effective_rank.py": "0b78379fe41d6b261fade193cd6229879f9a67c0a01ca289206d9c480a4d6ca1",
+    "analysis/compare_v3_latent_drift.py": "90472d78bb06eb06ca139b6d68e96ac5f2b7a45407f79d40831b324c28994d98",
+    "analysis/select_occlusion_v3_winner.py": "45afb058ff31c80b8142e3d3a0bbbbaedf897f7d5b3d21419fd68724dc276428",
+    "scripts/run_occlusion_v3_campaign.py": "c84c1581256c9725a68f69443d7d0fe2d12a8fe4820cc4d7201e02c31f34eff5"
+  },
+  "dataset_pair": {
+    "created_from": "${WORLD_MODEL_ROOT}/datasets/primitive_v1/formal_v1/primitive_v1_mixed_train.h5",
+    "source_sha256": "07bf078c00ebb46b7aea309bbd1f103c23d4e9b6ae15fab26360fa8f21b22312",
+    "generator_seed": 20260731,
+    "selection": {
+      "source_episodes": 24000,
+      "original_boundary_eligible": 24000,
+      "motion15x_boundary_eligible": 16063,
+      "shared_boundary_eligible": 16063,
+      "selected_unique_sources": 16060,
+      "dropped_for_five_way_balance": 3,
+      "output_episodes": 16060,
+      "unique_output_trajectories": 14454,
+      "pair_groups": 1606,
+      "pair_eligible_sources": 12427
+    },
+    "variants": {
+      "original_motion": {
+        "variant": "original_motion",
+        "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v3/primitive_v3_h4_reveal5_original_motion.h5",
+        "sha256": "7241c1060d317aa898c6355c5dcb5cb32d383687bea548c23c1857b389e3b3e3",
+        "num_episodes": 16060,
+        "unique_trajectories": 14454,
+        "motion_scale": 1.0,
+        "first_occlusion_randomized": false,
+        "schedule_counts": {
+          "(3, 4, 4, 4, 7)": 3213,
+          "(3, 4, 5, 4, 6)": 3213,
+          "(3, 4, 6, 4, 5)": 3212,
+          "(3, 4, 7, 4, 4)": 3211,
+          "(3, 4, 8, 4, 3)": 3211
+        },
+        "reveal_index_counts": {
+          "15": 3213,
+          "16": 3213,
+          "17": 3212,
+          "18": 3211,
+          "19": 3211
+        },
+        "split_counts": {
+          "0": 14443,
+          "1": 802,
+          "2": 815
+        },
+        "pair_groups": 1606
+      },
+      "motion15x": {
+        "variant": "motion15x",
+        "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v3/primitive_v3_h4_reveal5_motion15x.h5",
+        "sha256": "a2bb50b6c767671b4d679b23413ee492ed5317a8553bcaa3eeda88b4aba95331",
+        "num_episodes": 16060,
+        "unique_trajectories": 14454,
+        "motion_scale": 1.5,
+        "first_occlusion_randomized": false,
+        "schedule_counts": {
+          "(3, 4, 4, 4, 7)": 3213,
+          "(3, 4, 5, 4, 6)": 3213,
+          "(3, 4, 6, 4, 5)": 3212,
+          "(3, 4, 7, 4, 4)": 3211,
+          "(3, 4, 8, 4, 3)": 3211
+        },
+        "reveal_index_counts": {
+          "15": 3213,
+          "16": 3213,
+          "17": 3212,
+          "18": 3211,
+          "19": 3211
+        },
+        "split_counts": {
+          "0": 14443,
+          "1": 802,
+          "2": 815
+        },
+        "pair_groups": 1606
+      }
+    },
+    "first_occlusion_decision": {
+      "randomized": false,
+      "reason": "The five-way second onset already tests absolute-time shortcuts; keeping the first onset fixed preserves a common memory burn-in and avoids adding pre-occlusion-history length as a confound."
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "pair_count": 111,
+  "status": "ok",
+  "mean_target_separation": 20.51445735037864,
+  "mean_prediction_separation": 11.58202117842597,
+  "mean_separation_ratio": 0.5748474143310734,
+  "mean_delta_alignment_cosine": -0.0009376833266222027
+}

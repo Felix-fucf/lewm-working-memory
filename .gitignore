@@ -1,13 +1,38 @@
-
-# Python cache
+.venv/
+.venv311/
 __pycache__/
-*.py[cod]
-.ipynb_checkpoints/
+.pytest_cache/
+*.pyc
 
-# Training and Hydra outputs
+# Local experiment storage
+datasets/
+.stable-wm/
+.stable-pretraining/
 lightning_logs/
 outputs/
 wandb/
+cache/
+backups/
 
-# Local backup files
-*.before_*
+# Model and dataset artifacts are remote-only; GitHub stores manifests only.
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.npy
+
+# Raw runs and transfer archives
+*.log
+*.out
+*.err
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Keep only curated result material under results/.
+results/**/logs/
+results/**/checkpoints/
+results/**/raw/

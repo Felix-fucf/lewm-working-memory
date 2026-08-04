@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this occlusion-memory study, please cite this repository and the upstream LeWorldModel work."
+title: "LeWorldModel: Causal Evaluation of Working Memory Under Occlusion"
+type: software
+authors:
+  - given-names: Felix
+    family-names: Fu
+version: 0.1.0
+date-released: 2026-08-04
+license: MIT
+keywords:
+  - world models
+  - working memory
+  - occlusion
+  - causal evaluation
+  - joint-embedding predictive architecture
+references:
+  - type: software
+    title: "LeWorldModel"
+    authors:
+      - given-names: Lucas
+        family-names: Maes
+      - given-names: Quentin
+        family-names: Le Lidec
+    repository-code: "https://github.com/lucas-maes/le-wm"

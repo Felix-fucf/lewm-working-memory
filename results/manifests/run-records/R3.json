@@ -1,0 +1,19 @@
+{
+  "label": "R3",
+  "run_id": "R3_dfinal_L0_s3072",
+  "dataset": "dfinal",
+  "loss": "L0",
+  "seed": 3072,
+  "epochs": 25,
+  "model_config": "oot_leaky_bottleneck_ln_zeroh0",
+  "strict_recurrent_bottleneck": true,
+  "started_utc": "2026-07-30T02:59:57.750875+00:00",
+  "completed_utc": "2026-07-30T07:36:54.222784+00:00",
+  "training_seconds_this_invocation": 16616.381665334105,
+  "checkpoint": "${WORLD_MODEL_ROOT}/.stable-wm/checkpoints/R3_dfinal_L0_s3072/weights_epoch_25.pt",
+  "checkpoint_sha256": "7f15a337e3ac5cba2f7d1fa3e44a737cdf0a53af3511546f96b0496ade9e3c0c",
+  "health_failures": [],
+  "status": "confirmed_complete",
+  "checkpoint_availability": "remote_only_not_in_repository",
+  "provenance": "sanitized copy of the verified remote run record"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "confirmed_rebuilt_artifact",
+  "rebuilt_on": "2026-08-04",
+  "selector": "analysis/select_occlusion_v3_winner.py",
+  "input": "verified surviving raw audits for N1/N2/N3 on both V3 validation datasets",
+  "output_sha256": "b514908b07be69d3f3387ba68907b010c632337cfc8dbf50abce479a949f1d15",
+  "selected": null,
+  "note": "The original selection_decision.json was absent on the remote machine; this file was rebuilt without retraining."
+}

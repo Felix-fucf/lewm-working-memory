@@ -1,0 +1,163 @@
+{
+  "created_utc": "2026-07-29T09:21:07.719069+00:00",
+  "campaign": "occlusion_curriculum_20260728",
+  "world_root": "${WORLD_MODEL_ROOT}",
+  "source_dataset": "${WORLD_MODEL_ROOT}/datasets/primitive_v1/formal_v1/primitive_v1_mixed_train.h5",
+  "source_sha256": "07bf078c00ebb46b7aea309bbd1f103c23d4e9b6ae15fab26360fa8f21b22312",
+  "files": {
+    "train_oot.py": "4d009d831ecdacc5fa768e9e95ef4e7ef3b99168ef994f193ad3c95f88ba2696",
+    "module_oot.py": "aef96a863b5a4cb03af19b0da53c3462d32a92ae0bc1419ab9768cb0356015cb",
+    "config/train/lewm_occlusion.yaml": "5825446533ed252d5733ff77f1c56b9879f3f447bcea6d38e7697df7638895b4",
+    "config/train/lewm_occlusion_l1.yaml": "080da1cff8e41bbeb89fd08df3304c7219e488cb647cf18f4f78323be9315930",
+    "config/train/model/oot_leaky_bottleneck_ln_zeroh0.yaml": "e5002e74aed517221f203541cc85dd5adb2e5a276e1a38720482ec738310c6d1",
+    "config/train/data/primitive_v2_dshort.yaml": "23171d3bc996e14f1a678be31fbe2a43291e902468446730923dd191c94c0419",
+    "config/train/data/primitive_v2_dmid.yaml": "4321d5cbae20e66faaf223b20696be4d7910c392d1b1b9636e023e6a7a5ce245",
+    "config/train/data/primitive_v2_dlong.yaml": "5e9c0a28fc625f191ddfd6d15dc9385359f1bbec0db427e58c0206618885ab69",
+    "config/train/data/primitive_v2_dfinal.yaml": "a386d2c4eeaa1e608e0cd6a080e3fe5753629df42f3bedf4d112359235f4c648",
+    "configs/occlusion_curriculum/campaign.yaml": "22e793adc284047cb653c293887d836bbfeb74248e603366510deefec1ed1a20",
+    "schema_tools/build_occlusion_curriculum.py": "e1382cd6826af60c8d23ee5c0b586d8857c10062a610c10a0f2d95959af608d9",
+    "schema_tools/audit_occlusion_dataset.py": "adffba5f4429dabf13747cd02e7db2764343377a8927be4c7edac1bcf04f9f76",
+    "schema_tools/render_occlusion_samples.py": "94fae995432cbcb89c3d2bd9ab25d74e335c640146ced07a046965541e95eb74",
+    "analysis/metrics.py": "59028abd0d64272df532fd9f055961f629e9819a1b01f9dc6dcdfb83c70cad71",
+    "analysis/audit_effective_rank.py": "2a4ceb95c148fb5cebd7059a9598dc96758629a39b4f4b9e9ffbc520b3663fff",
+    "analysis/select_occlusion_winner.py": "96751fa5f23caa7a6054626267d94f91e5294979ca9dcbb76a45228029234605",
+    "analysis/render_campaign_report.py": "eaa83b22e78c31423daf72573a070fac55eeed9284d1429d682c32851f314b11",
+    "scripts/run_occlusion_campaign.py": "a8d20aaceca05119ca1f35a788bd06c11670e8a3ba7362afc8f728031336d071"
+  },
+  "datasets": {
+    "dshort": {
+      "variant": "dshort",
+      "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v2/primitive_v2_dshort.h5",
+      "sha256": "6870d4152a99a025ad50296b52cb7af93ae2b7b8c76ec6517bc5573451402c47",
+      "num_episodes": 24000,
+      "episode_length": 22,
+      "reveal_index_counts": {
+        "18": 24000
+      },
+      "schedule_counts": {
+        "(np.int16(3), np.int16(4), np.int16(9), np.int16(2), np.int16(4))": 24000
+      },
+      "schedule_proportions": {
+        "(np.int16(3), np.int16(4), np.int16(9), np.int16(2), np.int16(4))": 1.0
+      },
+      "occlusion_length_counts": {
+        "2": 24000
+      },
+      "occlusion_length_proportions": {
+        "2": 1.0
+      },
+      "split_counts": {
+        "0": 21600,
+        "1": 1200,
+        "2": 1200
+      },
+      "paired_episodes": 0
+    },
+    "dmid": {
+      "variant": "dmid",
+      "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v2/primitive_v2_dmid.h5",
+      "sha256": "29388dbe130d2c33f273a2fac11fad4b317432c89f23e26bf8767453561aa2a5",
+      "num_episodes": 24000,
+      "episode_length": 22,
+      "reveal_index_counts": {
+        "18": 24000
+      },
+      "schedule_counts": {
+        "(np.int16(3), np.int16(4), np.int16(7), np.int16(4), np.int16(4))": 24000
+      },
+      "schedule_proportions": {
+        "(np.int16(3), np.int16(4), np.int16(7), np.int16(4), np.int16(4))": 1.0
+      },
+      "occlusion_length_counts": {
+        "4": 24000
+      },
+      "occlusion_length_proportions": {
+        "4": 1.0
+      },
+      "split_counts": {
+        "0": 21600,
+        "1": 1200,
+        "2": 1200
+      },
+      "paired_episodes": 0
+    },
+    "dlong": {
+      "variant": "dlong",
+      "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v2/primitive_v2_dlong.h5",
+      "sha256": "549749cb7af8c8dee4f070015a6d00c6200c53bd9597cda3e0d9495c5833e91b",
+      "num_episodes": 24000,
+      "episode_length": 22,
+      "reveal_index_counts": {
+        "18": 24000
+      },
+      "schedule_counts": {
+        "(np.int16(3), np.int16(4), np.int16(3), np.int16(8), np.int16(4))": 24000
+      },
+      "schedule_proportions": {
+        "(np.int16(3), np.int16(4), np.int16(3), np.int16(8), np.int16(4))": 1.0
+      },
+      "occlusion_length_counts": {
+        "8": 24000
+      },
+      "occlusion_length_proportions": {
+        "8": 1.0
+      },
+      "split_counts": {
+        "0": 21600,
+        "1": 1200,
+        "2": 1200
+      },
+      "paired_episodes": 0
+    },
+    "dfinal": {
+      "variant": "dfinal",
+      "path": "${WORLD_MODEL_ROOT}/datasets/primitive_v2/primitive_v2_dfinal.h5",
+      "sha256": "8e420aab2daf4811a66fb56b9fe1d153113b191cef3daa81d587fae22c4e1c1d",
+      "num_episodes": 24000,
+      "episode_length": 22,
+      "reveal_index_counts": {
+        "17": 7905,
+        "18": 8005,
+        "19": 8090
+      },
+      "schedule_counts": {
+        "(np.int16(3), np.int16(4), np.int16(2), np.int16(8), np.int16(5))": 1633,
+        "(np.int16(3), np.int16(4), np.int16(3), np.int16(8), np.int16(4))": 1592,
+        "(np.int16(3), np.int16(4), np.int16(4), np.int16(8), np.int16(3))": 1575,
+        "(np.int16(3), np.int16(4), np.int16(6), np.int16(4), np.int16(5))": 2406,
+        "(np.int16(3), np.int16(4), np.int16(7), np.int16(4), np.int16(4))": 2415,
+        "(np.int16(3), np.int16(4), np.int16(8), np.int16(2), np.int16(5))": 3866,
+        "(np.int16(3), np.int16(4), np.int16(8), np.int16(4), np.int16(3))": 2379,
+        "(np.int16(3), np.int16(4), np.int16(9), np.int16(2), np.int16(4))": 3998,
+        "(np.int16(3), np.int16(4), np.int16(10), np.int16(2), np.int16(3))": 4136
+      },
+      "schedule_proportions": {
+        "(np.int16(3), np.int16(4), np.int16(2), np.int16(8), np.int16(5))": 0.06804166666666667,
+        "(np.int16(3), np.int16(4), np.int16(3), np.int16(8), np.int16(4))": 0.06633333333333333,
+        "(np.int16(3), np.int16(4), np.int16(4), np.int16(8), np.int16(3))": 0.065625,
+        "(np.int16(3), np.int16(4), np.int16(6), np.int16(4), np.int16(5))": 0.10025,
+        "(np.int16(3), np.int16(4), np.int16(7), np.int16(4), np.int16(4))": 0.100625,
+        "(np.int16(3), np.int16(4), np.int16(8), np.int16(2), np.int16(5))": 0.16108333333333333,
+        "(np.int16(3), np.int16(4), np.int16(8), np.int16(4), np.int16(3))": 0.099125,
+        "(np.int16(3), np.int16(4), np.int16(9), np.int16(2), np.int16(4))": 0.16658333333333333,
+        "(np.int16(3), np.int16(4), np.int16(10), np.int16(2), np.int16(3))": 0.17233333333333334
+      },
+      "occlusion_length_counts": {
+        "2": 12000,
+        "4": 7200,
+        "8": 4800
+      },
+      "occlusion_length_proportions": {
+        "2": 0.5,
+        "4": 0.3,
+        "8": 0.2
+      },
+      "split_counts": {
+        "0": 21600,
+        "1": 1191,
+        "2": 1209
+      },
+      "paired_episodes": 4800
+    }
+  }
+}
