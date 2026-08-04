@@ -1,0 +1,63 @@
+campaign_id: occlusion_v3_reveal5_20260731
+deadline: 2026-08-09
+full_training_epochs: 25
+gpu_policy: single_gpu_serial
+manual_hours_per_day: 3
+
+model:
+  architecture: oot_leaky_bottleneck_ln_zeroh0
+  strict_recurrent_bottleneck: true
+  encoder: vit_tiny_patch14_from_scratch
+  first_occlusion_randomized: false
+
+data:
+  source: primitive_v1/formal_v1/primitive_v1_mixed_train.h5
+  generator_seed: 20260731
+  frame_loss_weight_policy: phase_relative_random_onset_zero_fixed_reveal_sum_normalized_v3_1
+  final_reveal_weight: 3.0
+  object_orientation_policy: cos_sin_from_object_angle_v1
+  schedules:
+    - [3, 4, 4, 4, 7]
+    - [3, 4, 5, 4, 6]
+    - [3, 4, 6, 4, 5]
+    - [3, 4, 7, 4, 4]
+    - [3, 4, 8, 4, 3]
+  second_occlusion_length: 4
+  reveal_indices: [15, 16, 17, 18, 19]
+  pair_fraction: 0.20
+  minimum_shared_eligible_episodes: 16000
+  boundary_policy: preserve_anchor_reject_whole_episode_on_contact_v1
+  motion_scales:
+    original_motion: 1.0
+    motion15x: 1.5
+
+losses:
+  L1:
+    config: lewm_occlusion_v3_l1
+    regularize_prediction: false
+    stop_gradient_target: true
+  L2:
+    config: lewm_occlusion_v3_l2
+    regularize_prediction: false
+    stop_gradient_target: false
+
+screen_runs:
+  - {label: N1, dataset: original_motion, loss: L1, seed: 3072}
+  - {label: N2, dataset: original_motion, loss: L2, seed: 3072}
+  - {label: N3, dataset: motion15x, loss: L2, seed: 3072}
+
+replication_runs:
+  - {label: N4, seed: 4096}
+  - {label: N5, seed: 5120}
+
+selection:
+  validation_datasets: [original_motion, motion15x]
+  primary: final_reappearance_macro_normalized_mse
+  material_improvement: 0.05
+  original_motion_max_nmse_ratio_to_N1: 1.10
+  hidden_shuffle_relative_increase_min: 0.05
+  bootstrap_ci95_lower_min_exclusive: 0.0
+  effective_rank_min: 10.0
+  top1_variance_ratio_max: 0.50
+  position_probe_max_absolute_drop: 0.02
+  tie_order: [N1, N2, N3]

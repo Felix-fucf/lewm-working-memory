@@ -1,0 +1,8 @@
+evidence_id,status,claim,source_locator
+E-V3-001,confirmed,"V3 freezes N1 as the reference and N2/N3 as controlled ablations.",configs/occlusion_v3/campaign.yaml
+E-V3-002,confirmed,"Both V3 datasets passed the surviving original-motion, motion15x, and paired-comparison audits.",results/manifests/dataset-audits/
+E-V3-003,confirmed,"N1 completed 25 epochs but failed the representation and physical-probe gates.",results/manifests/audits/N1/validation_original_motion/
+E-V3-004,confirmed,"N2 completed 25 epochs; L2 restored prediction rank without restoring position semantics or causal sensitivity.",results/manifests/audits/N2/validation_original_motion/
+E-V3-005,confirmed,"N3 completed 25 epochs; motion15x did not produce a selected candidate.",results/manifests/audits/N3/validation_motion15x/
+E-V3-006,confirmed_rebuilt,"The selector was rerun from surviving raw audits and returned selected=null.",results/manifests/selection_decision.json
+E-V3-007,planned,"The next experiment is the visible-frame representation gate; no artifact exists.",docs/experiment-history.md

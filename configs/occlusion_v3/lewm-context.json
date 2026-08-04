@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "project_name": "LeWorldModel occlusion-memory audit",
+    "as_of": "2026-08-04",
+    "status_source": "verified remote run records and raw audits"
+  },
+  "research": {
+    "question": "Does the strict recurrent state carry causal, object-specific information across occlusion?",
+    "main_model": "oot_leaky_bottleneck_ln_zeroh0",
+    "main_reference_config": "N1: original_motion + L1 + seed 3072",
+    "overall_conclusion": "N1, N2, and N3 completed 25 epochs, but no candidate passed the representation, performance, physical-probe, and causal-memory gates.",
+    "conclusion_status": "confirmed_negative",
+    "next_direction": "visible-frame representation gate",
+    "next_direction_status": "planned_not_run"
+  },
+  "experiments": [
+    {
+      "id": "N1",
+      "status": "confirmed_complete",
+      "role": "main_reference",
+      "result": "High reset/shuffle sensitivity, but prediction rank 1.56, no-memory +0.14%, and negative position probes."
+    },
+    {
+      "id": "N2",
+      "status": "confirmed_complete",
+      "role": "stop_gradient_ablation",
+      "result": "Prediction rank recovered to 67.32, but shuffle +0.30% and position probes remained negative."
+    },
+    {
+      "id": "N3",
+      "status": "confirmed_complete",
+      "role": "motion_amplitude_ablation",
+      "result": "Prediction rank 65.22, shuffle +0.26%, final NMSE near the mean baseline, and no semantic direction recovery."
+    },
+    {
+      "id": "N4",
+      "status": "planned_not_run",
+      "role": "replication"
+    },
+    {
+      "id": "N5",
+      "status": "planned_not_run",
+      "role": "replication"
+    }
+  ],
+  "selection": {
+    "selected": null,
+    "status": "confirmed_rebuilt_artifact",
+    "artifact": "results/manifests/selection_decision.json",
+    "provenance": "results/manifests/selection_decision.provenance.json"
+  }
+}

@@ -1,0 +1,9 @@
+defaults:
+  - lewm_occlusion_l1
+  - _self_
+
+# V3 L1: predictor-side var/cov is disabled and the target occurrence is
+# detached.  The encoder still receives L_pred through the context branch.
+oot_loss:
+  regularize_prediction: false
+  stop_gradient_target: true

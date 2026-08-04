@@ -1,0 +1,8 @@
+defaults:
+  - lewm_occlusion_v3_l1
+  - _self_
+
+# V3 L2 changes exactly one switch relative to V3 L1: the target occurrence
+# also receives L_pred gradient. Encoder-side conditioned var/cov stays on.
+oot_loss:
+  stop_gradient_target: false
