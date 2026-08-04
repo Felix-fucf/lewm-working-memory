@@ -1,0 +1,48 @@
+# Strict LeWM recurrent bottleneck (corrected architecture).
+#
+# s_t       = Encoder(o_t)
+# h_t       = LeakyRNN(h_(t-1), concat(s_t, E(a_(t-1))))
+# s_hat_t+1 = PointwisePredictor(concat(h_t, E(a_t)))
+
+_target_: module_oot.StrictRecurrentOOTJEPA
+
+encoder:
+  _target_: stable_pretraining.backbone.utils.vit_hf
+  size: tiny
+  patch_size: 14
+  image_size: ${img_size}
+  pretrained: false
+  use_mask_token: false
+
+projector:
+  _target_: module.MLP
+  input_dim: ${embed_dim}
+  hidden_dim: 2048
+  output_dim: ${embed_dim}
+  norm_fn:
+    _target_: torch.nn.LayerNorm
+    _partial_: true
+
+action_encoder:
+  _target_: module.Embedder
+  input_dim: ???
+  emb_dim: ${embed_dim}
+
+memory:
+  _target_: module_oot.LeakyRNNMemory
+  input_dim: 384
+  hidden_dim: ${embed_dim}
+  leak_rate: 0.2
+  learnable_leak: false
+  dropout: 0.0
+  initial_state_std: 0.0
+
+predictor:
+  _target_: module_oot.PointwiseActionPredictor
+  state_dim: ${embed_dim}
+  action_dim: ${embed_dim}
+  hidden_dim: 2048
+  output_dim: ${embed_dim}
+  dropout: 0.1
+
+embed_dim: ${embed_dim}

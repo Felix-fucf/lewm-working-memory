@@ -1,0 +1,99 @@
+defaults:
+  - _self_
+  - launcher: local
+  - data: primitive_v2_dshort
+  - model: oot_leaky_bottleneck_ln_zeroh0
+
+# L0 is frozen to the recovered 25-epoch main run.
+output_model_name: occlusion_run
+subdir: ${output_model_name}
+num_workers: 6
+train_split: 0.9
+seed: 3072
+img_size: 224
+embed_dim: 192
+history_size: 21
+
+trainer:
+  max_epochs: 25
+  devices: auto
+  accelerator: gpu
+  precision: bf16-mixed
+  gradient_clip_val: 1.0
+  log_every_n_steps: 50
+
+loader:
+  batch_size: 4
+  num_workers: ${num_workers}
+  persistent_workers: true
+  prefetch_factor: 3
+  pin_memory: true
+
+optimizer:
+  type: AdamW
+  lr: 1.0e-5
+  weight_decay: 1.0e-3
+
+num_preds: 1
+
+loss:
+  sigreg:
+    weight: 0.09
+    kwargs:
+      knots: 17
+      num_proj: 1024
+
+oot_loss:
+  reappearance_weight: 1.0
+  reappearance_phase_ids: [2, 4]
+  phase_ids: [0, 1, 2, 3, 4]
+  regularizer_mode: conditioned_vicreg_v2
+  stop_gradient_target: true
+  global_sigreg_weight: 0.0
+  legacy_global_variance_weight: 0.0
+  conditioned_variance_weight: 25.0
+  conditioned_covariance_weight: 1.0
+  variance_target_std: 1.0
+  regularize_prediction: true
+  content_contrastive_weight: 0.0
+  content_temperature: 0.1
+  min_samples_per_timestep: 2
+
+checkpoint:
+  enabled: true
+  export_weights: true
+  export_every_n_epochs: 1
+  monitor: validate/pred_loss_reappearance
+  mode: min
+  save_top_k: 3
+  save_last: true
+  every_n_epochs: 1
+  dirpath: ${oc.env:WORLD_MODEL_ROOT,.}/results/${subdir}/best_checkpoints
+
+safety:
+  require_no_batchnorm: true
+  expected_initial_state_std: 0.0
+  require_strict_recurrent_bottleneck: true
+  collapse_guard:
+    enabled: false
+  lr_scan_stop:
+    enabled: false
+
+# 0=train, 1=validation, 2=reserved test. The generator assigns a whole
+# trajectory (and therefore every matched-pair member) to exactly one split.
+split:
+  assignment_key: split_id
+  train_value: 0
+  validation_value: 1
+  test_value: 2
+  trajectory_key: trajectory_id
+
+wandb:
+  enabled: false
+  config:
+    entity: lewm
+    project: lewm
+    name: ${output_model_name}
+    id: ${subdir}
+    resume: allow
+    log_model: false

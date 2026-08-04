@@ -127,14 +127,28 @@ class LeakyRNNMemory(nn.Module):
         leak_rate: float = 0.2,
         learnable_leak: bool = False,
         dropout: float = 0.0,
+        initial_state_std: float = 0.01,
     ) -> None:
         super().__init__()
 
         _validate_probability(leak_rate, "leak_rate")
 
+        initial_state_std = float(initial_state_std)
+        if initial_state_std < 0.0:
+            raise ValueError(
+                "initial_state_std 必须大于等于 0，"
+                f"实际收到 {initial_state_std}。"
+            )
+
         self.input_dim = int(input_dim)
         self.hidden_dim = int(hidden_dim)
         self.learnable_leak = bool(learnable_leak)
+
+        # 每个 episode 的初始 hidden state 使用小幅独立高斯噪声。
+        #
+        # std=0 时严格退化为原先的零初始化；
+        # std>0 时，每个 batch 样本获得独立随机初态。
+        self.initial_state_std = initial_state_std
 
         # 当前时刻输入 x_t 对候选记忆的影响。
         self.input_proj = nn.Linear(self.input_dim, self.hidden_dim, bias=True)
@@ -171,6 +185,29 @@ class LeakyRNNMemory(nn.Module):
         nn.init.zeros_(self.input_proj.bias)
         nn.init.orthogonal_(self.hidden_proj.weight)
 
+    def _sample_initial_state(
+        self,
+        reference: Tensor,
+        batch_size: int,
+    ) -> Tensor:
+        """生成每个 episode 独立的小幅随机初始 hidden state。"""
+        shape = (int(batch_size), self.hidden_dim)
+
+        if self.initial_state_std == 0.0:
+            return reference.new_zeros(shape)
+
+        # 使用 float32 采样后再转换，避免 bf16/fp16 随机采样精度过低。
+        noise = torch.randn(
+            shape,
+            device=reference.device,
+            dtype=torch.float32,
+        )
+
+        return (
+            noise
+            * self.initial_state_std
+        ).to(dtype=reference.dtype)
+
     @property
     def leak_rate(self) -> Tensor:
         """返回当前 alpha；返回值是标量 Tensor，位于 (0, 1)。"""
@@ -195,7 +232,7 @@ class LeakyRNNMemory(nn.Module):
 
         initial_state:
             shape = (B, hidden_dim)
-            若为 None，则从全零状态开始。
+            若为 None，则按 initial_state_std 采样小幅随机状态。
 
         valid_mask:
             shape = (B, T) 或 (B, T, 1)
@@ -229,8 +266,13 @@ class LeakyRNNMemory(nn.Module):
                 f"但实际输入最后一维为 {input_dim}。"
             )
 
-        if initial_state is None:
-            hidden = x.new_zeros(batch_size, self.hidden_dim)
+        sampled_initial_state = initial_state is None
+
+        if sampled_initial_state:
+            hidden = self._sample_initial_state(
+                x,
+                batch_size,
+            )
         else:
             expected = (batch_size, self.hidden_dim)
             if tuple(initial_state.shape) != expected:
@@ -271,8 +313,26 @@ class LeakyRNNMemory(nn.Module):
             current_valid = valid_mask[:, t]
             current_reset = reset_mask[:, t]
 
-            # reset_mask=1 时，在读取 x_t 前把此前 episode 的记忆清零。
-            hidden = hidden * (1.0 - current_reset)
+            # reset_mask=1 时，在读取 x_t 前为新 episode
+            # 重新采样小幅随机初态，而不是清成严格全零。
+            # initial_state=None 时，序列开始前已经采样过一次 h0。
+            # 因此 t=0 的 episode_start 只表示“这是新 episode”，
+            # 不应再次采样并丢弃刚生成的初态。
+            should_resample_reset = (
+                (t > 0 or not sampled_initial_state)
+                and bool(torch.any(current_reset > 0.5))
+            )
+
+            if should_resample_reset:
+                reset_hidden = self._sample_initial_state(
+                    x,
+                    batch_size,
+                )
+
+                hidden = (
+                    (1.0 - current_reset) * hidden
+                    + current_reset * reset_hidden
+                )
 
             candidate = torch.tanh(
                 self.input_proj(current_input) + self.hidden_proj(hidden)
@@ -292,6 +352,153 @@ class LeakyRNNMemory(nn.Module):
         hidden_sequence = self.output_dropout(hidden_sequence)
 
         return hidden_sequence, hidden
+
+
+class PointwiseActionPredictor(nn.Module):
+    """Predict the next latent independently at every timestep.
+
+    The predictor has no temporal operators: no attention, recurrence,
+    positional embedding, or causal mask.  All history must therefore pass
+    through the recurrent state supplied by :class:`StrictRecurrentOOTJEPA`.
+    """
+
+    def __init__(
+        self,
+        state_dim: int,
+        action_dim: int,
+        hidden_dim: int,
+        output_dim: int,
+        dropout: float = 0.1,
+    ) -> None:
+        super().__init__()
+        self.state_dim = int(state_dim)
+        self.action_dim = int(action_dim)
+        self.output_dim = int(output_dim)
+        self.net = nn.Sequential(
+            nn.Linear(self.state_dim + self.action_dim, int(hidden_dim)),
+            nn.LayerNorm(int(hidden_dim)),
+            nn.GELU(),
+            nn.Dropout(float(dropout)),
+            nn.Linear(int(hidden_dim), self.output_dim),
+        )
+
+    def forward(self, state: Tensor, action: Tensor) -> Tensor:
+        if state.ndim != 3 or action.ndim != 3:
+            raise ValueError("state and action must both have shape (B,T,D)")
+        if state.shape[:2] != action.shape[:2]:
+            raise ValueError(
+                "state/action batch and time dimensions differ: "
+                f"state={tuple(state.shape)}, action={tuple(action.shape)}"
+            )
+        if state.size(-1) != self.state_dim:
+            raise ValueError(
+                f"expected state_dim={self.state_dim}, got {state.size(-1)}"
+            )
+        if action.size(-1) != self.action_dim:
+            raise ValueError(
+                f"expected action_dim={self.action_dim}, got {action.size(-1)}"
+            )
+        return self.net(torch.cat((state, action), dim=-1))
+
+
+class StrictRecurrentOOTJEPA(nn.Module):
+    """OOT world model with a strict recurrent information bottleneck.
+
+    Data flow:
+        s_t = encoder(o_t)
+        h_t = LeakyRNN(h_(t-1), concat(s_t, E(a_(t-1))))
+        s_hat_(t+1) = predictor(concat(h_t, E(a_t)))
+
+    ``remember`` deliberately returns the raw hidden sequence as the predictor
+    state.  There is no visual residual or hidden-to-embedding bypass.
+    """
+
+    strict_recurrent_bottleneck = True
+
+    def __init__(
+        self,
+        encoder: nn.Module,
+        predictor: PointwiseActionPredictor,
+        action_encoder: nn.Module,
+        memory: LeakyRNNMemory,
+        embed_dim: int,
+        projector: Optional[nn.Module] = None,
+    ) -> None:
+        super().__init__()
+        self.encoder = encoder
+        self.predictor = predictor
+        self.action_encoder = action_encoder
+        self.memory = memory
+        self.embed_dim = int(embed_dim)
+        self.projector = projector or nn.Identity()
+
+        if self.memory.input_dim != 2 * self.embed_dim:
+            raise ValueError(
+                "strict bottleneck memory must receive concat(s_t, E(a_t-1)); "
+                f"expected input_dim={2 * self.embed_dim}, "
+                f"got {self.memory.input_dim}"
+            )
+        if self.memory.hidden_dim != self.embed_dim:
+            raise ValueError(
+                "strict bottleneck currently requires hidden_dim == embed_dim; "
+                f"got {self.memory.hidden_dim} and {self.embed_dim}"
+            )
+
+    def encode(self, info: Dict[str, Tensor]) -> Dict[str, Tensor]:
+        if "pixels" not in info:
+            raise KeyError("StrictRecurrentOOTJEPA.encode requires 'pixels'")
+        output = dict(info)
+        pixels = info["pixels"].float()
+        if pixels.ndim < 3:
+            raise ValueError(
+                "pixels must include batch and time dimensions; "
+                f"got {tuple(pixels.shape)}"
+            )
+        batch_size = pixels.size(0)
+        encoder_output = self.encoder(
+            rearrange(pixels, "b t ... -> (b t) ..."),
+            interpolate_pos_encoding=True,
+        )
+        cls = encoder_output.last_hidden_state[:, 0]
+        projected = self.projector(cls)
+        output["emb"] = rearrange(projected, "(b t) d -> b t d", b=batch_size)
+        if "action" in info:
+            output["act_emb"] = self.action_encoder(info["action"])
+        return output
+
+    def remember(
+        self,
+        emb: Tensor,
+        act_emb: Optional[Tensor] = None,
+        initial_state: Optional[Tensor] = None,
+        valid_mask: Optional[Tensor] = None,
+        reset_mask: Optional[Tensor] = None,
+    ) -> Tuple[Tensor, Tensor, Tensor]:
+        if emb.ndim != 3 or emb.size(-1) != self.embed_dim:
+            raise ValueError(
+                f"emb must have shape (B,T,{self.embed_dim}), got {tuple(emb.shape)}"
+            )
+        if act_emb is None:
+            raise ValueError("strict bottleneck remember() requires previous action")
+        if act_emb.shape != emb.shape:
+            raise ValueError(
+                "previous action embedding must match visual embedding shape; "
+                f"visual={tuple(emb.shape)}, action={tuple(act_emb.shape)}"
+            )
+        hidden, final_state = self.memory(
+            torch.cat((emb, act_emb), dim=-1),
+            initial_state=initial_state,
+            valid_mask=valid_mask,
+            reset_mask=reset_mask,
+        )
+        return hidden, hidden, final_state
+
+    def predict(self, hidden: Tensor, act_emb: Tensor) -> Tensor:
+        return self.predictor(hidden, act_emb)
+
+    @property
+    def leak_rate(self) -> Tensor:
+        return self.memory.leak_rate
 
 
 class OOTJEPA(nn.Module):
@@ -509,7 +716,7 @@ class OOTJEPA(nn.Module):
         """
         predictions = self.predictor(memory_emb, act_emb)
 
-        # pred_proj 通常是带 BatchNorm 的 MLP。
+        # pred_proj 使用 LayerNorm MLP；禁止 BatchNorm 跨样本统计。
         batch_size = memory_emb.size(0)
         predictions = self.pred_proj(
             rearrange(predictions, "b t d -> (b t) d")

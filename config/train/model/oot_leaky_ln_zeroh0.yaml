@@ -96,13 +96,16 @@ memory:
   learnable_leak: false
   dropout: 0.0
 
+  # 每维标准差 0.01；192 维初态的期望范数约为 0.139。
+  initial_state_std: 0.0
+
 # OOTJEPA 需要知道 predictor 使用的最终 embedding 维度。
 embed_dim: ${embed_dim}
 
 # -----------------------------------------------------------------------------
 # 5. 图像编码器后的 projector
 #
-# 与原始 LeWM 保持相同。
+# 使用 LayerNorm，禁止依赖 batch 统计。
 # -----------------------------------------------------------------------------
 projector:
   _target_: module.MLP
@@ -110,13 +113,13 @@ projector:
   output_dim: ${embed_dim}
   hidden_dim: 2048
   norm_fn:
-    _target_: torch.nn.BatchNorm1d
+    _target_: torch.nn.LayerNorm
     _partial_: true
 
 # -----------------------------------------------------------------------------
 # 6. predictor 输出后的 projection head
 #
-# 与原始 LeWM 保持相同。
+# 使用 LayerNorm，禁止依赖 batch 统计。
 # -----------------------------------------------------------------------------
 pred_proj:
   _target_: module.MLP
@@ -124,7 +127,7 @@ pred_proj:
   output_dim: ${embed_dim}
   hidden_dim: 2048
   norm_fn:
-    _target_: torch.nn.BatchNorm1d
+    _target_: torch.nn.LayerNorm
     _partial_: true
 
 # -----------------------------------------------------------------------------

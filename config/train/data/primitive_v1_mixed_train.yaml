@@ -1,0 +1,74 @@
+dataset:
+  name: primitive_v1/formal_v1/primitive_v1_mixed_train.h5
+  format: hdf5
+  num_steps: 22
+  frameskip: 1
+  keys_to_load:
+  - pixels
+  - action
+  - phase_id
+  - object_visible
+  - is_reappearance
+  - is_final_reappearance
+  - valid_mask
+  - episode_start
+  - episode_id
+  - timestep
+  - content_id
+  - shape_id
+  - color_id
+  - schema_id
+  - pair_id
+  - pair_role
+  - motion_type
+  - frame_loss_weight
+  - object_position
+  - object_velocity
+  - object_angle
+  - object_orientation
+  - object_angular_velocity
+  keys_to_cache:
+  - action
+  - phase_id
+  - object_visible
+  - is_reappearance
+  - is_final_reappearance
+  - valid_mask
+  - episode_start
+  - episode_id
+  - timestep
+  - content_id
+  - shape_id
+  - color_id
+  - schema_id
+  - pair_id
+  - pair_role
+  - motion_type
+  - frame_loss_weight
+  - object_position
+  - object_velocity
+  - object_angle
+  - object_orientation
+  - object_angular_velocity
+metadata_keys:
+- phase_id
+- object_visible
+- is_reappearance
+- is_final_reappearance
+- valid_mask
+- episode_start
+- episode_id
+- timestep
+- content_id
+- shape_id
+- color_id
+- schema_id
+- pair_id
+- pair_role
+- motion_type
+- frame_loss_weight
+- object_position
+- object_velocity
+- object_angle
+- object_orientation
+- object_angular_velocity
