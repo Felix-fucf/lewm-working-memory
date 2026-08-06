@@ -1,10 +1,26 @@
 # LeWorldModel：遮挡条件下的因果工作记忆审计
 
-> **当前结论：** 截至 2026-08-04，完整的 C0–R3 与 V3 N1–N3 实验都没有提供可靠的、对象特定的因果工作记忆证据。N1 对 hidden shuffle 很敏感，但 prediction representation 塌缩且 no-memory gate 几乎不变；N2/N3 提高了 prediction rank，却没有恢复位置语义或 matched-future direction。
+## 我完成的工作
 
-## English abstract
+本项目基于上游 LeWorldModel，围绕“模型是否真正使用跨遮挡记忆”这一问题，我完成了从任务定义、模型改造、数据设计到因果评估和结果复盘的一轮完整研究闭环。具体工作包括：
 
-This repository studies whether LeWorldModel genuinely uses recurrent state to bridge visual occlusion, rather than exploiting visibility, timing, dataset ambiguity, or representation shortcuts. We introduce a strict recurrent bottleneck, paired occlusion datasets, and causal evaluation gates combining hidden-state interventions, normalized prediction error, effective rank, physical-state probes, and matched-future direction. A seemingly positive C0–R3 result was invalidated by a dataset identifiability audit. On the corrected V3 datasets, all three completed 25-epoch candidates failed the preregistered selection gates (`selected=null`). The current evidence therefore does not support object-specific causal working memory; the next frozen step is a visible-frame representation gate.
+- **明确研究问题与证据标准**：把“hidden state 会影响输出”与“hidden state 记住了正确的对象信息”区分开，不再用低训练 loss、单一 shuffle 指标或线性可解码性直接证明工作记忆。
+- **构建严格递归瓶颈**：将 OOT 模型改造成严格的 Leaky-RNN 数据流，排除 predictor 中的 temporal module、位置参数和当前视觉 residual bypass，使跨时间信息只能通过递归状态传递。
+- **设计并实现遮挡数据集**：完成 primitive-v2 curriculum 与 primitive-v3 五种 reveal schedule；加入 paired comparison、边界检查、随机 onset target 屏蔽和数据 identifiability audit。
+- **建立多证据因果评估体系**：联合使用 no-memory、逐步 reset、hidden shuffle、归一化预测误差、effective rank、物理状态 probe 和 matched-future direction，而不是依赖单一指标。
+- **完成两轮正式实验**：完整运行并审计 C0–R3 和 V3 N1–N3 共 7 个 25-epoch 实验，保留 checkpoint SHA256、run record、raw audit 与统一结果表。
+- **主动推翻不可靠的阳性解释**：发现旧 Dfinal 数据存在严重不可辨识性，并通过 direction alignment 与物理 probe 说明 R3 的 shuffle 阳性不足以证明正确的未来记忆。
+- **完成可复现的科研整理**：整理测试、配置、结果图、证据 manifest、实验历史和复现说明；数据集、checkpoint 与完整日志仅保留哈希和远程归档，不进入 GitHub。
+
+以上内容是我在上游 LeWorldModel 基础上完成的研究扩展，不包括上游基础架构本身。
+
+## 阶段性结论
+
+> 截至 2026-08-04，完整的 C0–R3 与 V3 N1–N3 实验尚未提供可靠的、对象特定的因果工作记忆证据。N1 对 hidden shuffle 很敏感，但 prediction representation 塌缩且 no-memory gate 几乎不变；N2/N3 提高了 prediction rank，却没有恢复位置语义或 matched-future direction。
+
+## 项目摘要
+
+本项目研究 LeWorldModel 在物体被遮挡后，是否真正依赖递归状态保存并使用对象信息，而不是利用可见性、绝对时间、数据歧义或表示捷径。为此，我构建了严格递归瓶颈、成对遮挡数据集和多层因果评估 gate，并通过 hidden-state 干预、归一化预测误差、effective rank、物理状态 probe 与 matched-future direction 交叉验证模型行为。C0–R3 中一度看似阳性的 R3 结果，被后续数据可辨识性审计和机制证据推翻；在修正后的 V3 数据上，三个完整训练的候选模型均未通过预先规定的综合 gate，selector 输出为 `selected=null`。因此，当前最可信的结论不是“模型已经获得工作记忆”，而是现有证据尚不支持对象特定的因果工作记忆；下一步只冻结为 visible-frame representation gate，且尚未执行。
 
 ## 研究问题
 
